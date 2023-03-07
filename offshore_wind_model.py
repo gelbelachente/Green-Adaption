@@ -10,8 +10,8 @@ pd.plotting.register_matplotlib_converters()
 
 df = pd.read_csv("data.csv")
 
-places = ["Rostock","Husum","Bremerhaven"]
-_features = ["_pressure","_temperature","_wind_speed","_wind_gust_speed","_wind_direction"]
+places = ["hamburg","rügen_island","sylt"]
+_features = ["_temp","_wind_speed_100m"]
 features = []
 for city in places:
     for feature in _features:
@@ -19,26 +19,17 @@ for city in places:
 
 print(df["offshore"].describe())
 
-train_dataset = df.sample(frac=0.8)
+train_dataset = df#.sample(frac=0.8)
 test_dataset = df.drop(train_dataset.index)
 
-imputer = SimpleImputer()
 _xTrain = train_dataset[features]
 _xTest = test_dataset[features]
-xTrain = pd.DataFrame(imputer.fit_transform(_xTrain))
-xTest = pd.DataFrame(imputer.fit_transform(_xTest))
-xTrain.columns = _xTrain.columns
-xTest.columns = _xTest.columns
 
 yTrain = train_dataset["offshore"].to_numpy()
 yTest = test_dataset["offshore"].to_numpy()
 
 model = Sequential([
     Dense(len(features),activation="relu",input_shape=[len(features)]),
-    Dropout(rate=0.2),
-    Dense(512, activation='relu'),
-    Dropout(rate=0.2),
-    Dense(512, activation='relu'),
     Dropout(rate=0.2),
     Dense(512, activation='relu'),
     Dense(1)
@@ -59,11 +50,9 @@ model.compile(
     metrics=[mae,mse,mre]
 )
 
-hist = model.fit(xTrain, yTrain, epochs=4, validation_data=(xTest, yTest))
+hist = model.fit(_xTrain, yTrain, epochs=4) #, validation_data=(_xTest, yTest))
 
 
-keras_file = "offshore_model.h5"
-tensorflow.keras.models.save_model(model,keras_file)
 converter = tensorflow.lite.TFLiteConverter.from_keras_model(model)
 tfmodel = converter.convert()
 

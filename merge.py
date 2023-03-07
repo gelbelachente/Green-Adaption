@@ -29,42 +29,18 @@ def get_elevation_angle(x):
     yday = ((month-1) * 30) + day
     return elevation_angle[(yday - 1) % 7][hour]
 
-pd.set_option('display.max_columns', 5000)
-#Weather Merge
-df1 = pd.read_csv("weather_data_1.csv", index_col="start_time")
-df2 = pd.read_csv("weather_data_2.csv", index_col="start_time")
-df3 = pd.read_csv("weather_data_3.csv", index_col="start_time")
-df4 = pd.read_csv("weather_data_4.csv", index_col="start_time")
 
-df = pd.concat([df1,df2])
-df = pd.concat([df,df3])
-df = pd.concat([df,df4])
-
-prod = pd.read_csv("germany_production.csv", index_col="start_time")
-
+df = pd.read_csv("weather_data.csv",index_col="start_time").dropna()
+print(len(df))
+prod = pd.read_csv("germany_production.csv", index_col="start_time").dropna()
+print(len(df))
 df = df.join(prod, how='right')
-
+print(len(df))
+df = df.dropna()
 df["elevation_angle"] = df.index.map(lambda x: get_elevation_angle(x))
 df["azimuth_angle"] = df.index.map(lambda x: get_azimuth_angle(x))
 
-df["month"] = df.index.map(lambda x: int(str(x)[5:7]))
-df["season"] = df.month.map(lambda x: x == 12 or x <= 2)
-df["hour"] = df.index.map(lambda x: int(str(x)[-2:]))
-
-
-print(df["azimuth_angle"].describe())
 print(df["elevation_angle"].describe())
 
-def limit(val,limit):
-    if val >= limit:
-        return val / 1000
-    else:
-        return val
-
-
-
-df["solar"] = df.solar.map(lambda x: limit(x,16.0))
-df["onshore"] = df.onshore.map(lambda x: limit(x,41.0))
-df["offshore"] = df.offshore.map(lambda x: limit(x,7.0))
-
+print(len(df))
 df.to_csv("data.csv")

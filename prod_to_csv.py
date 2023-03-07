@@ -1,20 +1,16 @@
 import pandas as pd
 
-"""Hier wird die beschädigte CSV-File der Bundesnetzagentur ausgelesen und die wichtigen Werte gespeichert"""
+df = pd.read_csv("production_2020.csv")
+df = pd.concat([df,pd.read_csv("production_2021.csv")],axis=0)
+df = pd.concat([df,pd.read_csv("production_2022.csv")],axis=0)
 
-df = {"start_time": [], "solar": [], "onshore":[], "offshore": []}
-
-with open("/realisierte_erzeugung.csv") as file:
-    lines = file.readlines()
-    lines = lines[1:len(lines)]
-    for line in lines:
-        data = line.split(";")
-        (day,month,year) = data[0].split(".")
-        time = "{}-{}-{}T{}".format(year,month,day,data[1][0:2])
-        df["offshore"] =  df["offshore"] + [float(data[5].split(",")[0])]
-        df["onshore"] = df["onshore"] + [float(data[6].split(",")[0])]
-        df["solar"] = df["solar"] + [float(data[7].split(",")[0])]
-        df["start_time"] = df["start_time"] + [time]
-
-p = pd.DataFrame(df)
-p.to_csv("D:\SYSTEM\Development\_Python\pycharm-workspace\SOLII\germany_production.csv")
+df["solar"] = df["Solar  - Actual Aggregated [MW]"].map(lambda x: float(str(x).replace(".","").replace(",","."))/1000)
+df["onshore"] = df["Wind Onshore  - Actual Aggregated [MW]"].map(lambda x: float(str(x).replace(".","").replace(",","."))/1000)
+df["offshore"] = df["Wind Offshore  - Actual Aggregated [MW]"].map(lambda x: float(str(x).replace(".","").replace(",","."))/1000)
+df["start_time"] = df["MTU"]
+df = df[["start_time","solar","onshore","offshore"]]
+df["start_time"] = df["start_time"].map(lambda x: str(x)[6:10] + "-" + str(x)[3:5] + "-" + str(x)[0:2] + "T" + str(x)[11:13])
+df = df.groupby('start_time').agg({'solar': 'mean', 'onshore': 'mean', 'offshore': 'mean'})
+df = df[["solar","onshore","offshore"]]
+print(df.index)
+df.to_csv("germany_production.csv")
