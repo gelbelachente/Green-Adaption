@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/welcomeFragment">
+
+    <fragment
+        android:id="@+id/heroFragment"
+        android:name="org.gelbelachente.sol.HeroFragment"
+        android:label="fragment_hero"
+        tools:layout="@layout/fragment_hero">
+        <action
+            android:id="@+id/action_heroFragment_to_hourlyForecastFragment"
+            app:destination="@id/hourlyForecastFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/hourlyForecastFragment"
+        android:name="org.gelbelachente.sol.HourlyForecastFragment"
+        android:label="fragment_hourly_forecast"
+        tools:layout="@layout/fragment_hourly_forecast" />
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="org.gelbelachente.sol.WelcomeFragment"
+        android:label="fragment_welcome"
+        tools:layout="@layout/fragment_welcome">
+        <action
+            android:id="@+id/action_welcomeFragment_to_heroFragment"
+            app:destination="@id/heroFragment" />
+    </fragment>
+</navigation>
