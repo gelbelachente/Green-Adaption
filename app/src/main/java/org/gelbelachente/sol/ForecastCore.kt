@@ -2,6 +2,8 @@ package org.gelbelachente.sol
 
 import android.content.Context
 import android.content.res.AssetFileDescriptor
+import android.graphics.Color
+import kotlin.math.pow
 import kotlin.math.sin
 
 class ForecastCore(private val ctx: Context) {
@@ -41,17 +43,18 @@ class ForecastCore(private val ctx: Context) {
         offshorePredictor.close()
     }
 
+
     private fun assess(conservativeUse: Float): Assessment {
-        if (conservativeUse < 10F) {
-            return Assessment.VeryHigh
-        } else if (conservativeUse < 15F) {
-            return Assessment.High
-        } else if (conservativeUse < 20F) {
-            return Assessment.Average
-        } else if (conservativeUse < 25F) {
-            return Assessment.Low
-        } else {
-            return Assessment.VeryLow
+        return if(conservativeUse < 13F){
+            Assessment.VeryHigh
+        }else if(conservativeUse < 26F){
+            Assessment.High
+        }else if(conservativeUse < 39F){
+            Assessment.Average
+        }else if(conservativeUse < 52F){
+            Assessment.Low
+        }else{
+            Assessment.VeryLow
         }
     }
 

@@ -41,7 +41,13 @@ class WeatherApi(private val scope: CoroutineScope, private val queue: RequestQu
     }
 
     private fun loadOfflineData() : Boolean{
+        if(WeatherData.results.isNotEmpty()){
+            return true
+        }
         val res = preferences.getString("weather_data",null)
+        repeat(WeatherData.places.size){
+            WeatherData.count.incrementAndGet()
+        }
         return if(res == null){
             false
         }else{
@@ -72,7 +78,6 @@ class WeatherApi(private val scope: CoroutineScope, private val queue: RequestQu
                 respond(response, place.first,current)
             },
             { e ->
-                Log.d("DEBUG----",e.stackTraceToString() + e.cause)
                 error()
             }
         )

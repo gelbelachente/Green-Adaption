@@ -1,6 +1,7 @@
 package org.gelbelachente.sol
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,7 @@ class HeroAdapter(private val ctx : Context, var data : Array<Overview?>, val on
             val date = LocalDate.now().plusDays(cur.id.toLong())
             holder.binding.heroText.text = "${date.dayOfMonth}. ${months[date.monthValue-1]}"
             holder.binding.heroColor.setBackgroundResource(cur.assessment.id)
+
             if(cur.isSun()){
                 holder.binding.heroSun.visibility = View.VISIBLE
             }

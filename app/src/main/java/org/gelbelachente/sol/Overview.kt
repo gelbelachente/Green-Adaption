@@ -1,9 +1,12 @@
 package org.gelbelachente.sol
 
+import android.graphics.Color
+
+
 data class Overview(val id : Int,
                     val greenAverage : Float,
                     val conservativeAverage : Float,
-                    val assessment: Assessment,
+                    val assessment : Assessment,
                     val solarPower : Float,
                     val onshorePower : Float,
                     val offshorePower : Float){

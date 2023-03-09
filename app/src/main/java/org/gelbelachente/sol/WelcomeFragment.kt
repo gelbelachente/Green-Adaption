@@ -2,6 +2,7 @@ package org.gelbelachente.sol
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -54,7 +55,7 @@ class WelcomeFragment : Fragment() {
         weatherApi.loadStaticAssets(azimuthAsset,elevationAsset)
         weatherApi.updateData() {
             if(it){ //backup available
-                Toast.makeText(requireContext(),"Keine Verbindung. Greife auf Backup zurück!",Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(),"Keine Verbindung. Greife auf Backup zurück!",Toast.LENGTH_SHORT).show()
                 backup = true
             }else {
                 //wait until connection is available

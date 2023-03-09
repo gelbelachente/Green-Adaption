@@ -1,5 +1,6 @@
 package org.gelbelachente.sol
 
+import android.util.Log
 import java.util.concurrent.atomic.AtomicInteger
 
 object WeatherData{
@@ -61,6 +62,7 @@ object WeatherData{
     }
 
     fun deserializeWeatherData(string: String){
+        Log.e("DEBUG",string)
         val places = string.split("?")
         for(i in places){
             val (place,data) = i.split("=")
